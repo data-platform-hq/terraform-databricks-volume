@@ -6,32 +6,36 @@ This module provides an ability to create Volumes in Databricks Unity Catalog
 
 ```hcl
 locals {
-  external_volumes = [
-    {
-      name             = "test-data-storage-eastus"
-      catalog_name     = "project-catalog"
-      schema_name      = "testing"
-      owner            = "username@domain.com"
-      comment          = "Testing Data Volume"
-      storage_location = "abfss://data-test.name@$projectstorageeastus.dfs.core.windows.net"
-    }
-    ]
+  external_volumes = [{
+    name             = "test-data-storage-eastus"
+    catalog_name     = "project-catalog"
+    schema_name      = "testing"
+    owner            = "username@domain.com"
+    comment          = "Testing Data Volume"
+    storage_location = "abfss://data-test.name@projectstorageeastus.dfs.core.windows.net"
+  }]
+}
+
+data "azurerm_databricks_workspace" "example" {
+  name                = "example-workspace"
+  resource_group_name = "example-rg"
 }
 
 # Databricks Provider configuration
 provider "databricks" {
-  alias                       = "main"
+  alias                       = "workspace"
   host                        = data.azurerm_databricks_workspace.example.workspace_url
   azure_workspace_resource_id = data.azurerm_databricks_workspace.example.id
 }
 
 module "databricks_volumes" {
-  source = "data-platform-hq/databricks-ws/volumes"
+  source  = "data-platform-hq/databricks-ws/volumes"
+  version = "~> 1.0"
 
   external_volumes = local.external_volumes
 
   providers = {
-    databricks = databricks.main
+    databricks = databricks.workspace
   }
 }
 ```
@@ -42,14 +46,14 @@ module "databricks_volumes" {
 | ---------------------------------------------------------------------------- |-----------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform)    | >= 1.0.0  |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm)          | >= 3.40.0 |
-| <a name="requirement_databricks"></a> [databricks](#requirement\_databricks) | >= 1.19.2 |
+| <a name="requirement_databricks"></a> [databricks](#requirement\_databricks) | >= 1.21.0 |
 
 ## Providers
 
 | Name                                                                   | Version |
 | ---------------------------------------------------------------------- |---------|
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm)          | 3.40.0  |
-| <a name="provider_databricks"></a> [databricks](#provider\_databricks) | 1.19.2  |
+| <a name="provider_databricks"></a> [databricks](#provider\_databricks) | 1.21.0  |
 
 ## Modules
 
@@ -72,6 +76,9 @@ No modules.
 ## Outputs
 
 <!-- END_TF_DOCS -->
+| Name                                                      | Description                                          |
+|-----------------------------------------------------------| ---------------------------------------------------- |
+| <a name="output_volumes"></a> [volumes](#output\_volumes) | Object with External Location parameters, like volume name, storage location path, catalog name and schema name|
 
 ## License
 
