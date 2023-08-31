@@ -9,6 +9,8 @@ resource "databricks_volume" "this" {
 }
 
 resource "databricks_grants" "volume" {
+  count = length(var.permissions) != 0 ? 1 : 0
+
   volume = databricks_volume.this.id
 
   dynamic "grant" {
