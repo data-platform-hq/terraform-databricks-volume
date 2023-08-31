@@ -1,19 +1,21 @@
-locals {
-  # Maps 'external_volumes' object, conditionally validates if 'name' parameter is provided
-  external_volumes_mapped = {
-    for object in var.external_volumes : object.name => object
-    if length(object.name) != 0
-  }
+resource "databricks_volume" "this" {
+  name             = var.volume.name
+  catalog_name     = var.volume.catalog_name
+  schema_name      = var.volume.schema_name
+  volume_type      = var.volume.volume_type
+  owner            = var.volume.owner
+  storage_location = var.volume.storage_location
+  comment          = var.volume.comment
 }
 
-resource "databricks_volume" "this" {
-  for_each = local.external_volumes_mapped
+resource "databricks_grants" "volume" {
+  volume = databricks_volume.this.id
 
-  name             = each.key
-  catalog_name     = each.value.catalog_name
-  schema_name      = each.value.schema_name
-  volume_type      = each.value.volume_type
-  owner            = each.value.owner
-  storage_location = each.value.storage_location
-  comment          = each.value.comment
+  dynamic "grant" {
+    for_each = var.permissions
+    content {
+      principal  = grant.value.principal
+      privileges = grant.value.privileges
+    }
+  }
 }
