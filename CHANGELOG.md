@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/data-platform-hq/terraform-databricks-volume/compare/v1.0.1...v1.0.2) (2023-08-31)
+
+
+### Bug Fixes
+
+* added condition to grants resource ([52babe8](https://github.com/data-platform-hq/terraform-databricks-volume/commit/52babe8aad82fb05d9fc97cfb7c2ae070034a4fb))
+
 ## [1.0.1](https://github.com/data-platform-hq/terraform-databricks-volume/compare/v1.0.0...v1.0.1) (2023-08-31)
 
 
