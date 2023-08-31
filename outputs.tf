@@ -1,9 +1,19 @@
-output "volumes" {
-  value = [for key in keys(local.external_volumes_mapped) : {
-    volume_name      = databricks_volume.this[key].name
-    storage_location = databricks_volume.this[key].storage_location
-    catalog_name     = databricks_volume.this[key].catalog_name
-    schema_name      = databricks_volume.this[key].schema_name
-  }]
-  description = "Object with External Location parameters, like volume name, storage location path, catalog name and schema name"
+output "volume_name" {
+  value       = databricks_volume.this.name
+  description = "Volume name"
+}
+
+output "storage_location" {
+  value       = databricks_volume.this.storage_location
+  description = "URL of target Storage Account Filesystem"
+}
+
+output "catalog_name" {
+  value       = databricks_volume.this.catalog_name
+  description = "Catalog name where volume is created"
+}
+
+output "schema_name" {
+  value       = databricks_volume.this.schema_name
+  description = "Schema name where volume is created"
 }
